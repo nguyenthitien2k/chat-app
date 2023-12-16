@@ -20,21 +20,24 @@ socketIO.on("connection", (socket) => {
 	console.log(`⚡: ${socket.id} user just connected!`);
 
 	socket.on("createRoom", (name) => {
+		console.log("create Room , name = ", name);
 		socket.join(name);
 		chatRooms.unshift({ id: generateID(), name, messages: [] });
 		socket.emit("roomsList", chatRooms);
+		console.log("roomsList = ", chatRooms);
 	});
 
 	socket.on("findRoom", (id) => {
 		let result = chatRooms.filter((room) => room.id == id);
-		// console.log(chatRooms);
+		console.log("findRoom", id);
 		socket.emit("foundRoom", result[0].messages);
-		// console.log("Messages Form", result[0].messages);
+		console.log("Messages Form", result[0].messages);
 	});
 
 	socket.on("newMessage", (data) => {
 		const { room_id, message, user, timestamp } = data;
 		let result = chatRooms.filter((room) => room.id == room_id);
+		console.log("result", result);
 		const newMessage = {
 			id: generateID(),
 			text: message,
@@ -43,10 +46,15 @@ socketIO.on("connection", (socket) => {
 		};
 		console.log("New Message", newMessage);
 		socket.to(result[0].name).emit("roomMessage", newMessage);
+		console.log("Socket to:  ", result[0].name);
+		console.log("Emit roomMessage:  ");
 		result[0].messages.push(newMessage);
+		console.log("Push message ");
 
 		socket.emit("roomsList", chatRooms);
+		console.log("Emit roomsList  ", chatRooms);
 		socket.emit("foundRoom", result[0].messages);
+		console.log("Emit foundRoom  ", result[0].messages);
 	});
 	socket.on("disconnect", () => {
 		socket.disconnect();
