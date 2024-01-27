@@ -37,24 +37,26 @@ socketIO.on("connection", (socket) => {
 	socket.on("newMessage", (data) => {
 		const { room_id, message, user, timestamp } = data;
 		let result = chatRooms.filter((room) => room.id == room_id);
-		console.log("result", result);
 		const newMessage = {
 			id: generateID(),
 			text: message,
 			user,
 			time: `${timestamp.hour}:${timestamp.mins}`,
 		};
-		console.log("New Message", newMessage);
 		socket.to(result[0].name).emit("roomMessage", newMessage);
-		console.log("Socket to:  ", result[0].name);
-		console.log("Emit roomMessage:  ");
 		result[0].messages.push(newMessage);
-		console.log("Push message ");
 
 		socket.emit("roomsList", chatRooms);
 		console.log("Emit roomsList  ", chatRooms);
 		socket.emit("foundRoom", result[0].messages);
 		console.log("Emit foundRoom  ", result[0].messages);
+	});
+	
+	socket.on("newMessage2", (data) => {
+		const { message, user, timestamp } = data;
+	
+		socket.emit("new message", message);
+		console.log("new message:  ", message);
 	});
 	socket.on("disconnect", () => {
 		socket.disconnect();
