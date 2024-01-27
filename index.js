@@ -55,7 +55,7 @@ socketIO.on("connection", (socket) => {
 	socket.on("newMessage2", (data) => {
 		const { message, user, timestamp } = data;
 	
-		socket.emit("new message", message);
+		socketIO.emit("new message", message);
 		console.log("new message:  ", message);
 	});
 	socket.on("disconnect", () => {
