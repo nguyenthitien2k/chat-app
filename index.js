@@ -43,12 +43,12 @@ socketIO.on("connection", (socket) => {
 			user,
 			time: `${timestamp.hour}:${timestamp.mins}`,
 		};
-		socket.to(result[0].name).emit("roomMessage", newMessage);
+		socketIO.to(result[0].name).emit("roomMessage", newMessage);
 		result[0].messages.push(newMessage);
 
-		socket.emit("roomsList", chatRooms);
+		socketIO.emit("roomsList", chatRooms);
 		console.log("Emit roomsList  ", chatRooms);
-		socket.emit("foundRoom", result[0].messages);
+		socketIO.emit("foundRoom", result[0].messages);
 		console.log("Emit foundRoom  ", result[0].messages);
 	});
 	
