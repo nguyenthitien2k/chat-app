@@ -30,7 +30,7 @@ socketIO.on("connection", (socket) => {
 	socket.on("findRoom", (id) => {
 		let result = chatRooms.filter((room) => room.id == id);
 		console.log("result", result);
-		if (result) {
+		if (result && result.length > 0) {
 			socket.emit("foundRoom", result[0].messages);
 			console.log("Messages Form", result[0].messages);
 		}
