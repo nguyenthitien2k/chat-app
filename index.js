@@ -19,10 +19,10 @@ let chatRooms = [];
 socketIO.on("connection", (socket) => {
 	console.log(`⚡: ${socket.id} user just connected!`);
 
-	socket.on("createRoom", (name) => {
-		console.log("create Room , name = ", name);
-		socket.join(name);
-		chatRooms.unshift({ id: generateID(), name, messages: [] });
+	socket.on("createRoom", (room) => {
+		console.log("create Room , name = ", room.name);
+		socket.join(room.name);
+		chatRooms.unshift({ id: room.id, name, messages: [] });
 		socket.emit("roomsList", chatRooms);
 		console.log("roomsList = ", chatRooms);
 	});
