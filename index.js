@@ -22,7 +22,7 @@ socketIO.on("connection", (socket) => {
 	socket.on("createRoom", (room) => {
 		console.log("create Room , name = ", room.name);
 		socket.join(room.name);
-		chatRooms.unshift({ id: room.id, name, messages: [] });
+		chatRooms.unshift({ id: room.id, name: room.name, messages: [] });
 		socket.emit("roomsList", chatRooms);
 		console.log("roomsList = ", chatRooms);
 	});
