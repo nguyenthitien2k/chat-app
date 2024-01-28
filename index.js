@@ -29,9 +29,11 @@ socketIO.on("connection", (socket) => {
 
 	socket.on("findRoom", (id) => {
 		let result = chatRooms.filter((room) => room.id == id);
-		console.log("findRoom", id);
-		socket.emit("foundRoom", result[0].messages);
-		console.log("Messages Form", result[0].messages);
+		console.log("result", result);
+		if (result) {
+			socket.emit("foundRoom", result[0].messages);
+			console.log("Messages Form", result[0].messages);
+		}
 	});
 
 	socket.on("newMessage", (data) => {
