@@ -29,7 +29,7 @@ socketIO.on("connection", (socket) => {
 
 	socket.on("findRoom", (id) => {
 		let result = chatRooms.filter((room) => room.id == id);
-		console.log("result", result);
+		console.log("result room", result);
 		if (result && result.length > 0) {
 			socket.emit("foundRoom", result[0].messages);
 			console.log("Messages Form", result[0].messages);
@@ -37,28 +37,26 @@ socketIO.on("connection", (socket) => {
 	});
 
 	socket.on("newMessage", (data) => {
+		console.log("data newmessage", data)
+		console.log("chatRooms", chatRooms)
 		const { room_id, message, user, timestamp } = data;
 		let result = chatRooms.filter((room) => room.id == room_id);
+		console.log("result room", result);
 		const newMessage = {
 			id: generateID(),
 			text: message,
 			user,
 			time: `${timestamp.hour}:${timestamp.mins}`,
 		};
-		socketIO.to(result[0].name).emit("roomMessage", newMessage);
-		result[0].messages.push(newMessage);
+		if (result && result.length > 0) {
+			socketIO.to(result[0].name).emit("roomMessage", newMessage);
+			result[0].messages.push(newMessage);
 
-		socketIO.emit("roomsList", chatRooms);
-		console.log("Emit roomsList  ", chatRooms);
-		socketIO.emit("foundRoom", result[0].messages);
-		console.log("Emit foundRoom  ", result[0].messages);
-	});
-	
-	socket.on("newMessage2", (data) => {
-		const { message, user, timestamp } = data;
-	
-		socketIO.emit("new message", message);
-		console.log("new message:  ", message);
+			socketIO.emit("roomsList", chatRooms);
+			console.log("Emit roomsList  ", chatRooms);
+			socketIO.emit("foundRoom", result[0].messages);
+			console.log("Emit foundRoom  ", result[0].messages);
+		}
 	});
 	socket.on("disconnect", () => {
 		socket.disconnect();
