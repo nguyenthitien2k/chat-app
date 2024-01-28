@@ -34,6 +34,9 @@ socketIO.on("connection", (socket) => {
 			socket.emit("foundRoom", result[0].messages);
 			console.log("Messages Form", result[0].messages);
 		}
+		else {
+			socket.emit("foundRoom", result);
+		}
 	});
 
 	socket.on("newMessage", (data) => {
