@@ -72,7 +72,8 @@ socketIO.on("connection", (socket) => {
     const newMessage = {
       id: generateID(),
       text: message,
-      userA,
+      from: userA,
+      to: userB,
       time: `${timestamp.hour}:${timestamp.mins}`,
     }
     socketIO.to(result[0].name).emit("roomMessage", newMessage)
