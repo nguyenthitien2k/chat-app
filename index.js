@@ -46,29 +46,22 @@ socketIO.on("connection", (socket) => {
   })
 
   socket.on("findRoomList", (data) => {
-    console.log("findRoomList", data.userA)
     let result = chatRooms.filter((room) => room.id.includes(data.userA))
-    console.log("result findRoomList", result)
     if (result && result.length > 0) {
       socket.emit("foundRoom", result[0].messages)
     }
   })
 
   socket.on("newMessage", (data) => {
-    console.log("data newmessage", data)
     const { message, userA, userB, timestamp } = data
     const room_id = generateRoomId(userA, userB)
     let result = chatRooms.filter((room) => room.id == room_id)
-    console.log("room result in newMessage:", result)
     if (result.length == 0) {
-      console.log("create Room , name = ", room_id)
       socket.join(room_id)
       chatRooms.unshift({ id: room_id, name: room_id, userA: userA, userB: userB, messages: [] })
       socket.emit("roomsList", chatRooms)
-      console.log("roomsList = ", chatRooms)
     }
     result = chatRooms.filter((room) => room.id == room_id)
-    console.log("room result in newMessage22222:", result)
     const newMessage = {
       id: generateID(),
       text: message,
@@ -80,7 +73,6 @@ socketIO.on("connection", (socket) => {
     result[0].messages.push(newMessage)
 
     socketIO.emit("roomsList", chatRooms)
-    console.log("Emit roomsList  ", chatRooms)
     socketIO.emit("foundRoom", result[0].messages)
     console.log("Emit foundRoom  ", result[0].messages)
   })
